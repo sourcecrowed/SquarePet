@@ -1,3 +1,4 @@
+import Mathz from './Mathz';
 import NameGenerator from './NameGenerator';
 import PhysicsBox from './PhysicsBox';
 import PhysicsObject from './PhysicsObject';
@@ -115,14 +116,15 @@ export default class SquarePet extends PhysicsObject {
 
     if (Math.floor(Math.random() * e.eyeMoveRarity) == e.eyeMoveLotto)
     {
-      e.eyeAngleTarget = (e.eyeAngleTarget + (Math.random() * Math.PI) / 2);
+      e.eyeAngleTarget = (e.eyeAngleTarget + (-Math.PI + Math.random() * (Math.PI * 2)) / 2);
       e.eyeDistFromCenterTarget = (e.eyeDistFromCenterTarget + (Math.random() * (e.eyeSize / 2))) / 2;
     }
 
     e.eyeAngle = (e.eyeAngleTarget + e.eyeAngle) / 2;
     e.eyeDistFromCenter = (e.eyeDistFromCenterTarget + e.eyeDistFromCenter) / 2;
 
-
+    Mathz.slowWrap(-Math.PI, Math.PI, e.eyeAngle);
+    Mathz.slowWrap(-Math.PI, Math.PI, e.eyeAngleTarget);
 
 /*
     let speed = p.getSpeed();

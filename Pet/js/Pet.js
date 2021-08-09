@@ -133,6 +133,25 @@ define("ts/PhysicsBox", ["require", "exports"], function (require, exports) {
     }
     exports.default = PhysicsBox;
 });
+define("ts/Mathz", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class Mathz {
+        // Wrap a number using the slow method.
+        static slowWrap(min, max, val) {
+            if (min >= max)
+                throw 'Min is greater than or equal to max!';
+            let diff = Math.abs(max - min);
+            while (val < min) {
+                val += diff;
+            }
+            while (val > max) {
+                val -= diff;
+            }
+        }
+    }
+    exports.default = Mathz;
+});
 define("ts/NameGenerator", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -215,9 +234,10 @@ define("ts/SquarePetSleep", ["require", "exports"], function (require, exports) 
     }
     exports.default = SquarePetSleep;
 });
-define("ts/SquarePet", ["require", "exports", "ts/NameGenerator", "ts/PhysicsObject", "ts/SquarePetEyeBlink", "ts/SquarePetEyes", "ts/SquarePetSleep"], function (require, exports, NameGenerator_1, PhysicsObject_1, SquarePetEyeBlink_1, SquarePetEyes_1, SquarePetSleep_1) {
+define("ts/SquarePet", ["require", "exports", "ts/Mathz", "ts/NameGenerator", "ts/PhysicsObject", "ts/SquarePetEyeBlink", "ts/SquarePetEyes", "ts/SquarePetSleep"], function (require, exports, Mathz_1, NameGenerator_1, PhysicsObject_1, SquarePetEyeBlink_1, SquarePetEyes_1, SquarePetSleep_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    Mathz_1 = __importDefault(Mathz_1);
     NameGenerator_1 = __importDefault(NameGenerator_1);
     PhysicsObject_1 = __importDefault(PhysicsObject_1);
     SquarePetEyeBlink_1 = __importDefault(SquarePetEyeBlink_1);
@@ -298,11 +318,13 @@ define("ts/SquarePet", ["require", "exports", "ts/NameGenerator", "ts/PhysicsObj
                 e.eyeDistFromCenterTarget = (e.eyeDistFromCenterTarget + (pSpeed / p.chanceBumpSpeed * (e.eyeSize / 2))) / 2;
             }
             if (Math.floor(Math.random() * e.eyeMoveRarity) == e.eyeMoveLotto) {
-                e.eyeAngleTarget = (e.eyeAngleTarget + (Math.random() * Math.PI) / 2);
+                e.eyeAngleTarget = (e.eyeAngleTarget + (-Math.PI + Math.random() * (Math.PI * 2)) / 2);
                 e.eyeDistFromCenterTarget = (e.eyeDistFromCenterTarget + (Math.random() * (e.eyeSize / 2))) / 2;
             }
             e.eyeAngle = (e.eyeAngleTarget + e.eyeAngle) / 2;
             e.eyeDistFromCenter = (e.eyeDistFromCenterTarget + e.eyeDistFromCenter) / 2;
+            Mathz_1.default.slowWrap(-Math.PI, Math.PI, e.eyeAngle);
+            Mathz_1.default.slowWrap(-Math.PI, Math.PI, e.eyeAngleTarget);
             /*
                 let speed = p.getSpeed();
                 e.eyeAngleTarget = p.getDirectionAngle();
